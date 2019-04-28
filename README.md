@@ -4,9 +4,10 @@
 
 ### philosophy
 traditional zine-making is democratized book-binding with 
-commonly available office supplies. no databases, no plugins. 
+commonly available office supplies. 
 netzine-cms aims to be as little as possible while also providing the tools 
-necessary to author a zine online. it is an organizational engine as 
+necessary to author a zine online. no databases, no plug-ins, no serious 
+dependency chain. it is an organizational engine as 
 well as a method of collage.
 
 ### usage
