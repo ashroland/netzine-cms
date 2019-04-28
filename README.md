@@ -18,6 +18,8 @@ decisions. accessible.
 netzine-cms assumes you already know how to author a webpage so it 
 provides no tools for generating semantic markdown. bloated. 
 
+---
+
 ### filetypes supported
 
 #### code snippets
@@ -29,7 +31,6 @@ files ending in .html and .php are rendered in full-width iframe.
 #### text snippets
 files ending in .txt are rendered as a column of 
 whitespace-adherent in-line text.
-
 
 ### usage
 
@@ -46,4 +47,5 @@ alphabetical order, so 2018-08-22.html will appear after
 
 - forward / back pagenav buttons
 - back-end tool for publishing / unpublishing files in ./pages
-	- userauth
+	- userauth??
+- better docs
