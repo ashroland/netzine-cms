@@ -83,7 +83,7 @@ function buildPageBody() {
 				buildPageFromFile($page);
 			} else {
 				// file is on blocklist, redirect
-				echo "<meta http-equiv=\"refresh\" content=\"0;url=https://xxyle.computer/\">\n";	
+				echo "<meta http-equiv=\"refresh\" content=\"0;url=/\">\n";	
 			}
 		} else {
 			// grab requested page
@@ -91,7 +91,7 @@ function buildPageBody() {
 
 			if ( is_file($page) == false ) {
 				// file does not exist, redirect
-				echo "<meta http-equiv=\"refresh\" content=\"0;url=https://xxyle.computer/\">\n";
+				echo "<meta http-equiv=\"refresh\" content=\"0;url=/\">\n";
 			} else {
 				// found real file. load contents.
 				buildPageFromFile($page);
@@ -134,7 +134,7 @@ function buildNavigation() {
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>XXYLE.COMPUTER</title>
+		<title>netzine-cms</title>
 		<script language="javascript">
 
 			function toggleCalendar() {
@@ -147,22 +147,6 @@ function buildNavigation() {
 			}
 
 		</script>
-		<script type="text/javascript" src="https://xxyle.computer/pages/packages/jquery/jquery-3.3.1.min.js"></script>
-		<script type="text/javascript" src="./pages/packages/cookie/jquery.cookie.js"></script>
-		<script type="text/javascript">
-			$(function() {
-					var COOKIE_NAME = 'xxyle.computer.contentwarning';
-					$go = $.cookie(COOKIE_NAME);
-					if ($go == null) {
-						$.cookie(COOKIE_NAME, 'wegood', { path: '/', expires: 365 });
-						window.location = "cw.php";
-					}
-					else {
-					}
-			});
-		</script>
-
-
 		<link rel="stylesheet" type="text/css" href="./res/style.css">
 	</head>
 	<body>
