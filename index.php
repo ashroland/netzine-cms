@@ -3,21 +3,6 @@
 global $blocklist;
 include './res/blocklist.php';
 
-function userInfo($file) {
-	// grab user info for hit log because i am curious!
-	
-	$ip = $_SERVER['REMOTE_ADDR']; // naive implementation for naive surveillance
-	
-	$logFile = "./users/.users";
-	$logContent = file_get_contents($logFile);
-	$timeStamp = date("Ymd-H:i:s");
-	$browser = $_SERVER['HTTP_USER_AGENT'];
-	$outString = $ip . "\t" . $file . "\t" . $timeStamp . "\t" . $browser . "\n" . $logContent;
-
-	file_put_contents($logFile, $outString);
-
-}
-
 function buildPageFromFile($file) {
 	// we will encounter many different kinds of files when
 	// we scan the page folder, and will want to handle them
@@ -53,9 +38,6 @@ function buildPageFromFile($file) {
 		// web languages rendered by browser; appear in a full-sized iframe 
 		echo "<iframe src=\"" . $file . "\" id=\"frame\"></iframe>\n";
 	}
-
-	// finally, log user info to file.
-	userInfo($file);
 
 }
 
