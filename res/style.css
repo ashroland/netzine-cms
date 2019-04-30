@@ -6,6 +6,7 @@ body {
 pre code {
 
 	margin-left: 150px;
+	margin-top: 15%;
 
 }
 
@@ -38,6 +39,16 @@ pre code {
 	font-family: monospace;
 	font-size:11px;
 }
+
+#image {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	margin-top: 33%;
+	text-align: center;
+}
+
 
 #calendar {
 	position: fixed;

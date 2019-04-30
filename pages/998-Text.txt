@@ -1,0 +1,7 @@
+Text files found in ./pages will be rendered as inline text
+	which 	honors
+			whitespace            formatting,
+
+	         for all of you would-be
+
+	             e e cummingses
