@@ -1,6 +1,9 @@
-# netzine-cms 
+# netzine-cms
 ### an ultra-lightweight static cms for netzines
 
+#### [tl;dr, want a live demo](https://ashro.land/netzine-cms)
+
+---
 
 ### philosophy
 traditional zine-making is democratized book-binding with 
@@ -42,8 +45,6 @@ clone this repository into /var/www/html or similar.
 add files to ./pages. netzine-cms sorts pages in descending 
 alphabetical order, so 2018-08-22.html will appear after 
 2013-03-22.html.
-
-### [Live Demo](https://ashro.land/netzine-cms)
 
 ### planned
 
