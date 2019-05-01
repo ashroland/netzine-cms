@@ -1,6 +1,6 @@
 # netzine-cms 
 ### an ultra-lightweight static cms for netzines
----
+
 
 ### philosophy
 traditional zine-making is democratized book-binding with 
@@ -43,9 +43,12 @@ add files to ./pages. netzine-cms sorts pages in descending
 alphabetical order, so 2018-08-22.html will appear after 
 2013-03-22.html.
 
+### [Live Demo](https://ashro.land/netzine-cms)
+
 ### planned
 
-- forward / back pagenav buttons
 - back-end tool for publishing / unpublishing files in ./pages
 	- userauth??
 - better docs
+
+
