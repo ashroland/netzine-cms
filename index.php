@@ -59,11 +59,11 @@ function buildPageFromFile($file) {
 		$height = $imgInfo[1];
 
 		// render inline css
-		$marginTop = "margin-top: " . -(floor($height / 2)) . "px;";
+		$marginTop  = "margin-top: " . (floor($height / 3)) . "px;";
 
-		echo '<div id="image">';
-		echo '<img src="' . $file . '" style="' . $marginTop . '" />';
-		echo '</div>';
+		echo '<center>';
+		echo '<img id="image" src="' . $file . '" style="' . $marginTop . '" />';
+		echo '</center>';
 	}
 
 }
