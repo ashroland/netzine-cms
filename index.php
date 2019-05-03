@@ -30,24 +30,24 @@ function buildPageFromFile($file) {
 	if ( in_array($fileExtension, $ext['text'])) {
 		// white-space sensitive textfiles just get echoed to a div,
 		// css takes care of the rest
-		echo "<div id=\"txt\">" . file_get_contents($file) . "</div>\n";
+		echo '<div id="txt">' . file_get_contents($file) . '</div>' . "\n";
 	}
 	else if ( in_array($fileExtension, $ext['code'])) {
 		// code snippets get parsed by a syntax highlighter.
 
 		// echo to a nested <pre><code>
-		echo "<pre><code class=\"" . $fileExtension . "\">";
+		echo '<pre><code class="' . $fileExtension . '">';
 		echo file_get_contents($file);
-		echo "\t\t</code></pre>\n\n";
+		echo tabs(2) . '</code></pre>' . "\n\n";
 
 		// add packages for highlighting and invoke.
-		echo "\t\t<link rel=\"stylesheet\" href=\"./res/highlight/styles/rainbow.css\" />\n";
-		echo "\t\t<script src=\"./res/highlight/highlight.pack.js\"></script>\n";
-		echo "\t\t<script>hljs.initHighlightingOnLoad();</script>\n";
+		echo tabs(2) . '<link rel="stylesheet" href="./res/highlight/styles/rainbow.css" />' . "\n";
+		echo tabs(2) . '<script src="./res/highlight/highlight.pack.js"></script>' . "\n";
+		echo tabs(2) . '<script>hljs.initHighlightingOnLoad();</script>' . "\n";
 	}
 	else if ( in_array($fileExtension, $ext['web'])) {
 		// web languages rendered by browser; appear in a full-sized iframe 
-		echo "<iframe src=\"" . $file . "\" id=\"frame\"></iframe>\n";
+		echo '<iframe src="' . $file . '" id="frame"></iframe>' . "\n";
 	}
 	else if ( in_array($fileExtension, $ext['images'])) {
 		// images positioned at top-third "fold" and centered
@@ -61,9 +61,9 @@ function buildPageFromFile($file) {
 		// render inline css
 		$marginTop  = "margin-top: " . (floor($height / 3)) . "px;";
 
-		echo '<center>';
-		echo '<img id="image" src="' . $file . '" style="' . $marginTop . '" />';
-		echo '</center>';
+		echo '<center>' . "\n";
+		echo tabs(3) . '<img id="image" src="' . $file . '" style="' . $marginTop . '" />' . "\n";
+		echo tabs(2) . '</center>' . "\n";
 	}
 
 }
@@ -133,7 +133,7 @@ function requestPage() {
 				buildPageFromFile($page);
 			} else {
 				// file is on blocklist, redirect
-				echo "<meta http-equiv=\"refresh\" content=\"0;url=/\">\n";	
+				echo '<meta http-equiv="refresh" content="0;url=/">' . "\n";	
 			}
 		} else {
 			// grab requested page
@@ -141,7 +141,7 @@ function requestPage() {
 
 			if ( is_file($page) == false ) {
 				// file does not exist, redirect
-				echo "<meta http-equiv=\"refresh\" content=\"0;url=/\">\n";
+				echo '<meta http-equiv="refresh" content="0;url=/">' . "\n";
 			} else {
 				// found real file. load contents.
 				buildPageFromFile($page);
@@ -158,13 +158,13 @@ function buildPageLinks() {
 
 	$files = getUnblockedFileList();
  	
- 	echo "<ul>\n";
+ 	echo '<ul>' . "\n";
  	foreach ($files as $file) {
  		// pretty up the filenames, format html nicely
  		$output = basename($file);
- 		echo "\t\t\t\t\t<li><a href=\"?p=" . $output . "\">" . $output . "</a></li>\n";
+ 		echo tabs(5) . '<li><a href="?p=' . $output . '">' . $output . "</a></li>\n";
  	}
- 	echo "\t\t\t\t</ul>\n";
+ 	echo tabs(4) . "</ul>\n";
 }
 
 function buildNavigation() {
@@ -191,19 +191,29 @@ function buildNavigation() {
 
 	if ($renderBackward == true) {
 		$prevLink = basename( $files[$index - 1] );
-		echo '<a href="?p=' . $prevLink . '"><img src="./res/prev.png" alt="previous" /></a>';
+		echo '<a href="?p=' . $prevLink . '"><img src="./res/prev.png" alt="previous" /></a>' . "\n";
 	} else {
-		echo '<img src="./res/blank.png" />';
+		echo '<img src="./res/blank.png" />' . "\n";
 	}
 
-	echo '<a href="#" onclick="toggleCalendar()"><img src="./res/calendar.png" alt="menu" /></a>';
+	echo tabs(3) . '<a href="#" onclick="toggleCalendar()"><img src="./res/calendar.png" alt="menu" /></a>' . "\n";
 
 	if ($renderForward == true) {
 		$nextLink = basename( $files[$index + 1] );
-		echo '<a href="?p=' . $nextLink . '"><img src="./res/next.png" alt="next" /></a>';
+		echo tabs(3) . '<a href="?p=' . $nextLink . '"><img src="./res/next.png" alt="next" /></a>' . "\n";
 	} else {
-		echo '<img src="./res/blank.png" />';
+		echo tabs(3) . '<img src="./res/blank.png" />' . "\n";
 	}
+}
+
+function tabs($num=1) {
+	$output = "";
+
+	for ($x = 0; $x < $num; $x++ ) {
+		$output .= "\t";
+	}
+
+	return $output;
 }
 
 ?>
