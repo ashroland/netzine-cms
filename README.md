@@ -51,5 +51,8 @@ to see how netzine-cms handles different filetypes, [check out the demo](https:/
 ### planned
 
 * assume subdirectories in ./pages are chapters and provide chapternav
-* module for common audio formats
+* more modules
+	* common audio formats
+	* .csv, .xslx, other tabulated data
+	* .docx, .rtf, other common word processor formats
 * more rigorous screenreader testing
