@@ -60,3 +60,8 @@ to see how netzine-cms handles different filetypes, [check out the demo](https:/
 	* .docx, .rtf, other common word processor formats
 * css rules for more screen sizes / pixel densities
 * more rigorous screenreader testing
+* start making some design decisions to accommodate slow / limited internet access
+	* server-side syntax highlighting 
+	* no large iframe for web rendering -- just pass page thru and add menu on top
+		* default css for pages without `<style>` tags?
+	* minified css, js, etc whenever possible

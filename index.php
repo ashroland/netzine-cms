@@ -35,6 +35,14 @@ function buildPageFromFile($file) {
 	}
 	else if ( in_array($fileExtension, $ext['code'])) {
 		// code snippets get parsed by a syntax highlighter.
+		//
+		// to consider in the future:
+		// is this a lightweight syntax highlighter? would this work
+		// be better offloaded to server-side rendering?
+		// it couldn't be too hard to whip up a php -> node linter...
+		// plus expecting the visitors to have reliable enough internet 
+		// to download a large package and execute it might be too 
+		// much for ppl with limited / slow internet 
 
 		// echo to a nested <pre><code>
 		echo '<pre><code class="' . $fileExtension . '">';
@@ -47,7 +55,14 @@ function buildPageFromFile($file) {
 		echo tabs(2) . '<script>hljs.initHighlightingOnLoad();</script>' . "\n";
 	}
 	else if ( in_array($fileExtension, $ext['web'])) {
-		// web languages rendered by browser; appear in a full-sized iframe 
+		// web languages rendered by browser; appear in a full-sized iframe.
+		// 
+		// for a possible major refactor, when i get bored lol,
+		// instead of an iframe we can just read and place whole web pages,
+		// and then add the menu on top. iframe may not be durable and
+		// while it is certified to be accessible, it is two page loads
+		// instead of just one. this might be considered a no-go overhead
+		// in areas with very low / slow internet access.
 		echo '<iframe src="' . $file . '" id="frame"></iframe>' . "\n";
 	}
 	else if ( in_array($fileExtension, $ext['images'])) {
