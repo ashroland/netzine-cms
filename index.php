@@ -11,6 +11,7 @@ $ext['text'] = array("txt");
 $ext['code'] = array("sh","py","js","c","cpp","rb");
 $ext['web']  = array("html", "php");
 $ext['images'] = array("jpg","png","gif","bmp");
+$ext['audio'] = array("mp3", "ogg", "wav");
 
 
 function buildPageFromFile($file) {
@@ -64,6 +65,18 @@ function buildPageFromFile($file) {
 		echo '<center>' . "\n";
 		echo tabs(3) . '<img id="image" src="' . $file . '" style="' . $marginTop . '" />' . "\n";
 		echo tabs(2) . '</center>' . "\n";
+	}
+	else if ( in_array($fileExtension, $ext['audio'])) {
+
+		// MP3 	audio/mpeg
+		// OGG 	audio/ogg
+		// WAV 	audio/wav
+
+		$typeString = ($fileExtension == "mp3" ? "mpeg" : $fileExtension);
+
+		echo '<audio controls>' . "\n";
+		echo tabs(3) . '<source src="' . $file . '" type="audio/' . $typeString . '">' . "\n";
+		echo tabs(2) . '</audio>' . "\n";
 	}
 
 }

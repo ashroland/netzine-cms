@@ -53,6 +53,10 @@ to see how netzine-cms handles different filetypes, [check out the demo](https:/
 * assume subdirectories in ./pages are chapters and provide chapternav
 * more modules
 	* common audio formats
+		* implemented, need demo audio
+	* common video formats
+		* fit player to browser's largest dimension w black background - "theater mode"
 	* .csv, .xslx, other tabulated data
 	* .docx, .rtf, other common word processor formats
+* css rules for more screen sizes / pixel densities
 * more rigorous screenreader testing
