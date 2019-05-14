@@ -47,7 +47,7 @@ pre code {
 
 #calendar {
 	position: fixed;
-	bottom: 70px;
+	bottom: 75px;
 	right: 40px;
 	width: 150px;
 	height: 200px;
@@ -58,7 +58,7 @@ pre code {
 
 	font-size: 12px;
 	font-family: monospace;
-	z-index: 9000;
+	z-index: 15000;
 }
 
 #calendar .top {
@@ -98,5 +98,5 @@ pre code {
 	position: fixed;
 	bottom: 20px;
 	right: 40px;
-	z-index: 9000;
+	z-index: 15000;
 }
