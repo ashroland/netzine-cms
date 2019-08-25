@@ -1,0 +1,27 @@
+/* Device scaling for viewport widths <= 640px */
+
+/* Reposition menu at bottom-center of viewport */
+
+#calbutton {
+	position: fixed;
+	bottom: 20px;
+	right: 40px;
+	z-index: 15000;
+}
+
+#calendar {
+	position: fixed;
+	bottom: 75px;
+	right: 50%;
+	width: 150px;
+	height: 200px;
+	background: #FFF;
+	margin: 0px;
+    padding: 0px;
+    margin-left: -75px;
+
+
+	font-size: 12px;
+	font-family: monospace;
+	z-index: 15000;
+}
