@@ -1,5 +1,9 @@
 <?php
 
+include("globals.php");
+include("user-prefs.php");
+include("func-chapterhandling.php");
+
 function buildPageFromFile($file) {
 	// we will encounter many different kinds of files when
 	// we scan the page folder, and will want to handle them
@@ -17,7 +21,7 @@ function buildPageFromFile($file) {
 	if ( in_array($fileExtension, $ext['text'])) {
 		// white-space sensitive textfiles just get echoed to a div,
 		// css takes care of the rest
-		echo '<div id="txt">' . file_get_contents($file) . '</div>' . "\n";
+		println('<div id="txt">' . file_get_contents($file) . '</div>');
 	}
 	else if ( in_array($fileExtension, $ext['code'])) {
 		// code snippets get parsed by a syntax highlighter.
@@ -33,12 +37,13 @@ function buildPageFromFile($file) {
 		// echo to a nested <pre><code>
 		echo '<pre><code class="' . $fileExtension . '">';
 		echo file_get_contents($file);
-		echo tabs(2) . '</code></pre>' . "\n\n";
+		println('</code></pre>', 2);
+		println("");
 
 		// add packages for highlighting and invoke.
-		echo tabs(2) . '<link rel="stylesheet" href="./res/highlight/styles/rainbow.css" />' . "\n";
-		echo tabs(2) . '<script src="./res/highlight/highlight.pack.js"></script>' . "\n";
-		echo tabs(2) . '<script>hljs.initHighlightingOnLoad();</script>' . "\n";
+		println('<link rel="stylesheet" href="./res/highlight/styles/rainbow.css" />', 2);
+		println('<script src="./res/highlight/highlight.pack.js"></script>', 2);
+		println('<script>hljs.initHighlightingOnLoad();</script>', 2);
 	}
 	else if ( in_array($fileExtension, $ext['web'])) {
 		// web languages rendered by browser; appear in a full-sized iframe.
@@ -49,7 +54,7 @@ function buildPageFromFile($file) {
 		// while it is certified to be accessible, it is two page loads
 		// instead of just one. this might be considered a no-go overhead
 		// in areas with very low / slow internet access.
-		echo '<iframe src="' . $file . '" id="frame"></iframe>' . "\n";
+		println('<iframe src="' . $file . '" id="frame"></iframe>');
 	}
 	else if ( in_array($fileExtension, $ext['images'])) {
 		// images positioned at top-third "fold" and centered
@@ -63,9 +68,9 @@ function buildPageFromFile($file) {
 		// render inline css
 		$marginTop  = "margin-top: " . (floor($height / 3)) . "px;";
 
-		echo '<center>' . "\n";
-		echo tabs(3) . '<img id="image" src="' . $file . '" style="' . $marginTop . '" />' . "\n";
-		echo tabs(2) . '</center>' . "\n";
+		println('<center>');
+		println('<img id="image" src="' . $file . '" style="' . $marginTop . '" />', 3);
+		println('</center>', 2);
 	}
 	else if ( in_array($fileExtension, $ext['audio'])) {
 
@@ -75,9 +80,9 @@ function buildPageFromFile($file) {
 
 		$typeString = ($fileExtension == "mp3" ? "mpeg" : $fileExtension);
 
-		echo '<audio controls>' . "\n";
-		echo tabs(3) . '<source src="' . $file . '" type="audio/' . $typeString . '">' . "\n";
-		echo tabs(2) . '</audio>' . "\n";
+		println('<audio controls>');
+		println('<source src="' . $file . '" type="audio/' . $typeString . '">', 3);
+		println('</audio>', 2);
 	}
 
 }
@@ -91,54 +96,15 @@ function rand_string($len=10) {
     return $random_string;
 }
 
-function sortChapters($dir) {
-	global $READ_FIRST_PAGE_FIRST;
-	global $READ_NEWEST_FIRST;
-	global $READ_NEWEST_CHAPTER_FROM_FIRST_PAGE_FIRST;
-
-	$chapters = getChapterDirs();
-
-	if ($dir == $READ_FIRST_PAGE_FIRST) {
-		// Sort $chapters oldest to newest
-		ksort($chapters);
-		foreach ($chapters as $name=>$chapter) {
-            // Sort pages alphabetically
-			sort($chapters[$name]);
-		}
-	}
-	else if ($dir == $READ_NEWEST_FIRST) {
-		// Sort $chapters reverse alphabetically
-		krsort($chapters);
-		foreach ($chapters as $name=>$chapter){
-            // Sort pages reverse alphabetically
-			rsort($chapters[$name]);
-		}
-	}
-	else if ($dir == $READ_NEWEST_CHAPTER_FROM_FIRST_PAGE_FIRST) {
-        // Sort $chapters reverse alphabetically
-        krsort($chapters);
-    
-		foreach ($chapters as $name=>$chapter) {
-            // Sort pages alphabetically
-            asort($chapters[$name]);
-        }
-        
-	}
-
-	return $chapters;
-
-}
-
 function buildPageLinks() {
 	
-	include("globals.php");
+	include("user-prefs.php");
 
 	// Sort data per user prefs
 	$chapters = sortChapters($READ_DIRECTION);
 
-
 	// Create nested lists for menu items
-	echo '<ul>' . "\n";
+	println('<ul>');
 
 	foreach ( $chapters as $chapterName=>$chapter ) {
 		// Each chapter is assigned a UID for expanding / collapsing 
@@ -153,7 +119,7 @@ function buildPageLinks() {
 			$showHide = "display";
 		} else if ($FOLD_BEHAVIOR == $FOLD_ALL){
 			$showHide = "hidden";
-		} else if ($FOLD_BEHAVIOR == $FOLD_ALL_BUT_CURRENT_CHAPTER) {
+		} else if ($FOLD_BEHAVIOR == $FOLD_ALL_BUT_NEWEST_CHAPTER) {
 			// Determine which key is the "newest" and keep it unfolded
 			// regardless of where it shows up in the menu order.
 
@@ -169,10 +135,47 @@ function buildPageLinks() {
 			} else {
 				$showHide = "hidden";
 			}
+		} else if ($FOLD_BEHAVIOR == $FOLD_ALL_BUT_CURRENT_CHAPTER) {
+			// Determine which chapter we're in and keep it unfolded
+			// regardless of where it shows up in order
+
+			$chap = "";
+
+			if (isset($_GET['p'])) {
+				// Easy mode
+				$pageQuery = $_GET['p'];
+				$chap = explode("/", $pageQuery)[0];
+			} else {
+				// Figure out how we're sorting pages and
+				// make some decisions from there
+				if ($READ_DIRECTION == $READ_NEWEST_CHAPTER_FROM_FIRST_PAGE_FIRST) {
+					// trickiest case
+					
+					// get list of pages
+					$allChapters = sortChapters($READ_DIRECTION);
+					// get index of current page
+					// First dict key is most recent chapter and its last elm 
+					// is the starting page
+					$chap = array_keys($allChapters)[0];
+				
+				} else {
+					$pages = sortPageList();
+					// echo var_dump($pages);
+					$chap = array_splice(explode("/", $pages[0]), -2, 1);
+					$chap = $chap[0];
+					// echo var_dump($chap);
+				}
+			}
+
+			if ($chap == $chapterName) {
+				$showHide = "display";
+			} else {
+				$showHide = "hidden";
+			}
 		}
 
-		echo tabs(5) . '<a href="#" onclick="toggleElement(\'' . $chapterUID . '\')"><li>' . $chapterName . '</li></a>' . "\n"; 
-		echo tabs(5) . '<ul id="' . $chapterUID . '" class="menuFold ' . $showHide . '">' . "\n";
+		println('<a href="#" onclick="toggleElement(\'' . $chapterUID . '\')"><li>' . $chapterName . '</li></a>', 5); 
+		println('<ul id="' . $chapterUID . '" class="menuFold ' . $showHide . '">', 5);
 		
 		foreach ($chapter as $page ) {
 			$disp = basename($page);
@@ -182,19 +185,32 @@ function buildPageLinks() {
 			} 
 
 			$link = $chapterName . "/" . basename($page);
-	 		echo tabs(6) . '<li><a href="?p=' . $link . '">' . $disp . "</a></li>\n";
+	 		println('<li><a href="?p=' . $link . '">' . $disp . '</a></li>', 6);
 		}
 		
-		echo tabs(5) . '</ul>' . "\n";
+		println('</ul>', 5);
 	}
 	
-	echo tabs(4) . '</ul>' . "\n";
+	println('</ul>', 4);
 }
 
 function buildNavigation() {
-// make arrows depending on state
+	// make arrows depending on state.
+	// Create a page list, sort it depending on user pref,
+	// determine where u are on that list, and create next/prev
+	// buttons which move through that list 
 
-	$files = getUnblockedFileList();
+	// include("globals.php");
+	include("user-prefs.php");
+
+	// Buttons will behave differently depending on how content is arranged
+	// global $READ_DIRECTION;
+	// global $READ_FIRST_PAGE_FIRST;
+	// global $READ_NEWEST_FIRST;
+	// global $READ_NEWEST_CHAPTER_FROM_FIRST_PAGE_FIRST;
+
+	$curPage = ""; // Assume we're at the starting page 
+	$outPages = sortPageList();
 	$index = 0;
 	$renderForward = true;
 	$renderBackward = true;
@@ -202,32 +218,65 @@ function buildNavigation() {
 	if (isset($_GET['p'])) {
 		// get index of current page
 		$curPage = $_GET['p'];
-		$index = array_search( "./pages/" . $curPage, $files);
+	} else if ($READ_DIRECTION == $READ_NEWEST_CHAPTER_FROM_FIRST_PAGE_FIRST) {
+		$allChapters = sortChapters($READ_DIRECTION);
+
+		// First dict key is most recent chapter and its last elm 
+		// is the starting page
+		$chap = array_keys($allChapters)[0];
+
+		// php does not rewrite key indices when reorder them,
+		// so we have to figure out which key accesses the 0th
+		// element. yuck. is this right?
+		$firstPageIndex = array_keys($allChapters[$chap])[0];
+		$firstPage = $allChapters[$chap][$firstPageIndex];
+
+		$curPage = makeRelativeChapterPath($firstPage);
+
+	} else {
+		$curPage = makeRelativeChapterPath($outPages[0]);
 	}
+
+	$search = getcwd() . "/chapters/" . $curPage;
+	$index = array_search( $search, $outPages);
+
 
 	// catch edge cases
 	if ($index == 0) {
 		$renderBackward = false;
-	} else if ($index == sizeof($files) - 1 ) {
+	} else if ($index == sizeof($outPages) - 1 ) {
 		$renderForward = false;
 	}
 	
-
+	// Build links
+	// 
 	if ($renderBackward == true) {
-		$prevLink = basename( $files[$index - 1] );
-		echo '<a href="?p=' . $prevLink . '"><img src="./res/prev.png" alt="previous" /></a>' . "\n";
+		// Find previous link in array
+		$prevLink = $outPages[$index - 1];
+
+		// Build a relative url
+		$prevLink = makeRelativeChapterPath($prevLink);
+		println('<a href="?p=' . $prevLink . '"><img src="./res/prev.png" alt="previous" /></a>');
 	} else {
-		echo '<img src="./res/blank.png" />' . "\n";
+		println('<img src="./res/blank.png" />');
 	}
 
-	echo tabs(3) . '<a href="#" onclick="toggleElement(\'calendar\')"><img src="./res/calendar.png" alt="menu" /></a>' . "\n";
+	println('<a href="#" onclick="toggleElement(\'calendar\')"><img src="./res/calendar.png" alt="menu" /></a>', 3);
 
 	if ($renderForward == true) {
-		$nextLink = basename( $files[$index + 1] );
-		echo tabs(3) . '<a href="?p=' . $nextLink . '"><img src="./res/next.png" alt="next" /></a>' . "\n";
+		// Find previous link in array
+		$nextLink = $outPages[$index + 1];
+		
+		// Build a relative url
+		$nextLink = makeRelativeChapterPath($nextLink);
+		println('<a href="?p=' . $nextLink . '"><img src="./res/next.png" alt="next" /></a>', 3);
 	} else {
-		echo tabs(3) . '<img src="./res/blank.png" />' . "\n";
+		println('<img src="./res/blank.png" />', 3);
 	}
+}
+
+function makeRelativeChapterPath($fqp) {
+	return implode("/", array_slice(explode("/" , $fqp), -2, 2));
 }
 
 function tabs($num=1) {
@@ -242,6 +291,11 @@ function tabs($num=1) {
 	}
 
 	return $output;
+}
+
+function println($inStr, $tabs=0) {
+	// Tidy output, tidy codebase. 
+	echo tabs($tabs) . $inStr . "\n";
 }
 
 ?>

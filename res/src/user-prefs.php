@@ -13,14 +13,13 @@ start from the very first page in the first chapter, like a traditional text.
 */
 
 // Start from first page of first chapter:
-// $READ_DIRECTION = $READ_FIRST_PAGE_FIRST;
+$READ_DIRECTION = $READ_FIRST_PAGE_FIRST;
 
 // Display the last page first. 
-$READ_DIRECTION = $READ_NEWEST_FIRST;
+// $READ_DIRECTION = $READ_NEWEST_FIRST;
 
 // Display first page of newest chapter first
 // $READ_DIRECTION = $READ_NEWEST_CHAPTER_FROM_FIRST_PAGE_FIRST;
-
 
 
 
@@ -43,10 +42,11 @@ Selects the behavior for hiding the titles of chapter pages behind a fold.
 // Hide all page names
 // $FOLD_BEHAVIOR = $FOLD_ALL;
 
-// Show only the page names of the current chapter
-$FOLD_BEHAVIOR =  $FOLD_ALL_BUT_CURRENT_CHAPTER;
+// Show only the page names of the newest chapter
+// $FOLD_BEHAVIOR = $FOLD_ALL_BUT_NEWEST_CHAPTER;
 
-
+// Fold all but the chapter the user is currently in
+$FOLD_BEHAVIOR = $FOLD_ALL_BUT_CURRENT_CHAPTER;
 
 
 

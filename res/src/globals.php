@@ -17,10 +17,12 @@ global $FOLD_BEHAVIOR;
 global $FOLD_NONE;
 global $FOLD_ALL;
 global $FOLD_ALL_BUT_CURRENT_CHAPTER;
+global $FOLD_ALL_BUT_NEWEST_CHAPTER;
 
 $FOLD_NONE                      = 200;
 $FOLD_ALL                       = 225;
 $FOLD_ALL_BUT_CURRENT_CHAPTER   = 250;
+$FOLD_ALL_BUT_NEWEST_CHAPTER    = 275;
 
 // Hide file extensions in menu?
 global $FILE_BEHAVIOR;

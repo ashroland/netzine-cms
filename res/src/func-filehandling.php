@@ -121,9 +121,36 @@ function requestPage() {
 			}
 		}
 	} else {
-        // No filename given, grab newest
-        $page = getUnblockedFileList($chapters_dir)[0];
- 		buildPageFromFile($page);
+        // No filename given, grab first file depending on userpref
+        include("globals.php");
+        include("user-prefs.php");
+
+
+        $filesList = [];
+        $firstPage = "";
+
+        // Sort pages and take first element as starting page
+        $filesList = sortPageList($READ_FIRST_PAGE_FIRST);
+        $firstPage = $filesList[0];
+
+        // Edge case: sort pages and take first element of second chapter
+        // as starting page
+        if ($READ_DIRECTION == $READ_NEWEST_CHAPTER_FROM_FIRST_PAGE_FIRST) {
+            $allChapters = sortChapters($READ_DIRECTION);
+
+            // First dict key is most recent chapter and its last elm 
+            // is the starting page
+            $chap = array_keys($allChapters)[0];
+
+            // php does not rewrite key indices when reorder them,
+            // so we have to figure out which key accesses the 0th
+            // element. yuck. is this right?
+            $firstPageIndex = array_keys($allChapters[$chap])[0];
+            $firstPage = $allChapters[$chap][$firstPageIndex];
+
+        }
+
+ 		buildPageFromFile($firstPage);
 	}
 }
 
