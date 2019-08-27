@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" /> 
+        <title>new css tests</title>
+        
+        <script language="javascript">
+
+			function toggleElement(uid) {
+				elm = document.getElementById(uid);
+                classes = elm.classList;
+
+				if ( elmHidden(uid) ){
+					classes.remove("hidden");
+					classes.add("visible");
+				} else {
+					classes.remove("visible");
+					classes.add("hidden");
+				}
+			}
+
+            function elmHidden(uid) {
+                elm = document.getElementById(uid);
+                classes = elm.classList;
+                return classes.contains("hidden");
+            }
+
+            document.onclick = function(evt) {
+                // Clicking outside of menu closes it
+                elm = document.getElementById("calendar");
+                style = window.getComputedStyle(elm);
+                menuWidth = style.width.split("px")[0];
+                width = window.innerWidth - menuWidth;
+
+                if ( !elmHidden("calendar") && evt.clientX < width ) {                  
+                    toggleElement("calendar");
+                    evt.preventDefault();
+                }
+            }
+
+        </script>
+        
+        <style type="text/css">
+            html {
+                width: 100%;
+                height: 100%;
+            }
+
+			body {
+                width: 100%;
+                height: 100%;
+				margin: 0px;
+				padding: 0px;
+				font-family: "Operator Mono", monospace;
+				font-weight: lighter;
+				font-size: 11px;
+			}
+
+            #container {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                display: flex;
+            }
+
+            #content {
+                background: #FF0000;
+                height: 100%;
+                width: auto;
+                flex-grow: 1;
+            }
+
+            #calendar {
+                background: #FFFF00;
+                width: 300px;
+                height: 100vh;
+            }
+
+            #calendar.visible {
+                display: flex;
+                justify-content: flex-end;
+                flex-direction: column;
+            }
+
+            #calendar.hidden {
+                display: none;
+            }
+
+            #upperMenu {
+                flex: 1;
+                overflow-y: scroll;
+                background: #FF6600;
+            }
+
+            #lowerMenu {
+                min-height: 40px;
+                margin-bottom: 80px;
+                margin-top: 20px;
+                background: #00FF00;
+            }
+
+            ul {
+                margin: 0px;
+            }
+
+            li {
+                min-height: 30px;
+                line-height: 30px;
+            }
+
+            li:hover {
+                background:rgba(0, 0, 0, 0.25);
+            }
+
+            #calbutton {
+                background: #0000FF;
+                color: #FFFFFF;
+                width: 300px;
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+                text-align: center;
+                height: 80px;
+            }
+
+            a {
+                color: #FFF;
+            }
+
+            .visible {
+                display: block;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+		</style>
+	</head>
+	<body>
+		<div id="container">
+
+            <div id="content">&nbsp;</div>
+            <div id="calendar" class="visible">
+                <div id="upperMenu">
+                    <ul>
+                        <li>this</li>
+                        <li>is</li>
+                        <li>taking</li>
+                        <li>up</li>
+                        <li>more</li>
+                        <li>space</li>
+                        <li>than</li>
+                        <li>it</li>
+                        <li>used</li>
+                        <li>to</li>
+                        <li>and</li>
+                        <li>i'm</li>
+                        <li>doing</li>
+                        <li>that</li>
+                        <li>on purpose</li>
+                    </ul>
+                </div>
+                <div id="lowerMenu">
+                    <ul>
+                        <li>menu</li>
+                        <li>items</li>
+                        <li>here</li>
+                    </ul>
+                </div>
+            </div>
+            <a href="#" onclick="toggleElement('calendar')"><div id="calbutton">toggle menu</a></div>
+
+        </div>
+	</body>
+</html>

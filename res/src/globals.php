@@ -33,6 +33,10 @@ $EXTENSIONS_HIDE = 300;
 $EXTENSIONS_SHOW = 325;
 
 
+// Pretty menu colors
+global $MENU_COLOR_START;
+global $MENU_COLOR_STEP;
+
 // Internal
 //
 // Supported file extensions

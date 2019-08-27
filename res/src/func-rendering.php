@@ -98,13 +98,19 @@ function rand_string($len=10) {
 
 function buildPageLinks() {
 	
+	// Build menu. 
+	//
 	include("user-prefs.php");
 
 	// Sort data per user prefs
 	$chapters = sortChapters($READ_DIRECTION);
 
-	// Create nested lists for menu items
-	println('<ul>');
+	println('<div id="upperMenu">');
+	println('<ul>', 4);
+
+	// do fun and pretty colors
+	$colCounter = $MENU_COLOR_START; 
+	$colStep = $MENU_COLOR_STEP;
 
 	foreach ( $chapters as $chapterName=>$chapter ) {
 		// Each chapter is assigned a UID for expanding / collapsing 
@@ -116,7 +122,7 @@ function buildPageLinks() {
 		$showHide = "";
 
 		if ($FOLD_BEHAVIOR == $FOLD_NONE) {
-			$showHide = "display";
+			$showHide = "visible";
 		} else if ($FOLD_BEHAVIOR == $FOLD_ALL){
 			$showHide = "hidden";
 		} else if ($FOLD_BEHAVIOR == $FOLD_ALL_BUT_NEWEST_CHAPTER) {
@@ -131,7 +137,7 @@ function buildPageLinks() {
 			// If so, it's the newest chapter
 
 			if ( $chapterName == array_keys($chapCopy)[0] ) {
-				$showHide = "display";
+				$showHide = "visible";
 			} else {
 				$showHide = "hidden";
 			}
@@ -160,21 +166,32 @@ function buildPageLinks() {
 				
 				} else {
 					$pages = sortPageList();
-					// echo var_dump($pages);
 					$chap = array_splice(explode("/", $pages[0]), -2, 1);
 					$chap = $chap[0];
-					// echo var_dump($chap);
 				}
 			}
 
 			if ($chap == $chapterName) {
-				$showHide = "display";
+				$showHide = "visible";
 			} else {
 				$showHide = "hidden";
 			}
 		}
 
-		println('<a href="#" onclick="toggleElement(\'' . $chapterUID . '\')"><li>' . $chapterName . '</li></a>', 5); 
+
+		// build uid style for cute hover effects. 
+		$col = prettyColor($colCounter);
+
+		$colUID = "menu_" . rand_string(8);
+		echo tabs(5) . '<style type="text/css">';
+		echo "." . $colUID . ":hover {";
+		echo "color: white; ";
+		echo "background-color:" . $col . "} ";
+		println('</style>');
+
+		println('<a href="#" style="color:' . $col . '" onclick="toggleElement(\'' . $chapterUID . '\')"><li class="' . $colUID . '">' . $chapterName . '</li></a>', 5); 
+		$colCounter+=$colStep;
+
 		println('<ul id="' . $chapterUID . '" class="menuFold ' . $showHide . '">', 5);
 		
 		foreach ($chapter as $page ) {
@@ -185,13 +202,40 @@ function buildPageLinks() {
 			} 
 
 			$link = $chapterName . "/" . basename($page);
-	 		println('<li><a href="?p=' . $link . '">' . $disp . '</a></li>', 6);
+			$col = prettyColor($colCounter);
+			println('<a href="?p=' . $link . '"><li style="border-color:' . $col . '">' . $disp . '</li>', 6);
+			$colCounter+=$colStep;
 		}
 		
 		println('</ul>', 5);
 	}
 	
 	println('</ul>', 4);
+	println('</div>', 3);
+	println('<div id="lowerMenu">', 3);
+	println('<ul>', 4);
+
+	// iterate contents of ./menu and build <li>s 
+
+	$menuItems = getSortedFiles("./menu");
+
+	foreach ($menuItems as $menuItem) {
+
+		$link = "?m=" . basename($menuItem);
+		$disp = basename($menuItem);
+
+		if ($EXTENSIONS_BEHAVIOR == $EXTENSIONS_HIDE) {
+			$disp = array_split(explode(".", $disp), -1, 1)[0];
+		}
+		
+		println('<a href="' . $link . '"><li>' . $disp . '</li></a>', 5);
+		
+	}
+
+
+	println('</ul>', 4);
+	println('</div>', 3);
+
 }
 
 function buildNavigation() {
@@ -296,6 +340,98 @@ function tabs($num=1) {
 function println($inStr, $tabs=0) {
 	// Tidy output, tidy codebase. 
 	echo tabs($tabs) . $inStr . "\n";
+}
+
+function mapNum($value, $istart, $istop, $ostart, $ostop) {
+	return $ostart + ($ostop - $ostart) * (($value - $istart) / ($istop - $istart));
+}
+
+function hsl2rgb($h, $s, $l) {
+	// big ups to enhzflep on stackoverflow
+	// i did not want to implement this
+	// thx bud
+
+	$r = $l;
+	$g = $l;
+	$b = $l;
+	$v = ($l <= 0.5) ? ($l * (1.0 + $s)) : ($l + $s - $l * $s);
+	if ($v > 0){
+		$m;
+		$sv;
+		$sextant;
+		$fract;
+		$vsf;
+		$mid1;
+		$mid2;
+
+		$m = $l + $l - $v;
+		$sv = ($v - $m ) / $v;
+		$h *= 6.0;
+		$sextant = floor($h);
+		$fract = $h - $sextant;
+		$vsf = $v * $sv * $fract;
+		$mid1 = $m + $vsf;
+		$mid2 = $v - $vsf;
+
+		switch ($sextant)
+		{
+			case 0:
+				$r = $v;
+				$g = $mid1;
+				$b = $m;
+				break;
+			case 1:
+				$r = $mid2;
+				$g = $v;
+				$b = $m;
+				break;
+			case 2:
+				$r = $m;
+				$g = $v;
+				$b = $mid1;
+				break;
+			case 3:
+				$r = $m;
+				$g = $mid2;
+				$b = $v;
+				break;
+			case 4:
+				$r = $mid1;
+				$g = $m;
+				$b = $v;
+				break;
+			case 5:
+				$r = $v;
+				$g = $m;
+				$b = $mid2;
+				break;
+		}
+	}
+	return array('r' => $r * 255.0, 'g' => $g * 255.0, 'b' => $b * 255.0);
+}
+
+function padHex($hex, $len) {
+
+	while (strlen($hex) < $len) {
+		$hex = "0" . $hex;
+	}
+
+	return $hex;
+
+}
+
+function hexColor($rgbArray) {
+
+	$hex_r = padHex(dechex($rgbArray['r']), 2);
+	$hex_g = padHex(dechex($rgbArray['g']), 2);
+	$hex_b = padHex(dechex($rgbArray['b']), 2);
+
+	return "#" . $hex_r . $hex_g . $hex_b . ";";
+}
+
+function prettyColor($hue, $saturation=100, $lightness=40) {
+	// return hexColor( hsl2rgb($hue, $saturation, $lightness) );
+	return "hsl(" . $hue . ","  . $saturation . "%," . $lightness . "%);";
 }
 
 ?>

@@ -66,4 +66,18 @@ Certain projects may require that file extensions are either occluded or on disp
 
 // Show file extensions
 $FILE_BEHAVIOR = $EXTENSIONS_SHOW;
+
+
+
+
+
+
+/*
+
+Menu coloring
+
+*/
+
+$MENU_COLOR_START = 100;
+$MENU_COLOR_STEP = 5;
 ?>

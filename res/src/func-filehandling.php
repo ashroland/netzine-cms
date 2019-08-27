@@ -84,6 +84,20 @@ function isBlocked($file) {
     return in_array($file, $blocklist);
 }
 
+function buildPageIfFileExists($file, $prefix) {
+
+    $fullPath = "./" . $prefix . "/" . $file;
+
+    if ( is_file($fullPath) == false ) {
+        // file does not exist, redirect
+        echo '<meta http-equiv="refresh" content="0;url=/">' . "\n";
+    } else {
+        // found real file. load contents.
+        buildPageFromFile($fullPath);
+    }
+
+}
+
 function requestPage() {
 
 	// Check $_GET for page request information.
@@ -95,36 +109,25 @@ function requestPage() {
     global $blocklist;
     global $chapters_dir;
 
-	if ($_GET['p']) {
+    // is page a menu item? 
+    if ($_GET['m']) {
+        $page = $_GET['m'];
+        buildPageIfFileExists($page, "menu");
+    }
+    
+    
+    else if ($_GET['p']) {
         $page = $_GET['p'];
 
 		if ( isBlocked($page) ) {
-			// catch request for about page -- handled a little differently
-			if ( $_GET['p'] == 'about.html') {
-				$page = "./pages/about.html";
-				buildPageFromFile($page);
-			} else {
-                // file is on blocklist, redirect
-                echo var_dump(isBlocked($page));
-				// echo '<meta http-equiv="refresh" content="0;url=/">' . "\n";	
-			}
+            echo '<meta http-equiv="refresh" content="0;url=/">' . "\n";	
 		} else {
-
-            $fullPath = "./chapters/" . $page;
-
-			if ( is_file($fullPath) == false ) {
-				// file does not exist, redirect
-				echo '<meta http-equiv="refresh" content="0;url=/">' . "\n";
-			} else {
-				// found real file. load contents.
-				buildPageFromFile($fullPath);
-			}
+            buildPageIfFileExists($page, "chapters");
 		}
 	} else {
         // No filename given, grab first file depending on userpref
         include("globals.php");
         include("user-prefs.php");
-
 
         $filesList = [];
         $firstPage = "";
@@ -147,9 +150,10 @@ function requestPage() {
             // element. yuck. is this right?
             $firstPageIndex = array_keys($allChapters[$chap])[0];
             $firstPage = $allChapters[$chap][$firstPageIndex];
-
+            
         }
 
+        $firstPage = "chapters/" . makeRelativeChapterPath($firstPage);
  		buildPageFromFile($firstPage);
 	}
 }

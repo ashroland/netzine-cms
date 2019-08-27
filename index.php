@@ -1,26 +1,5 @@
 <?php
 
-/* 
-
-EPOCH 2:
-
-Chapter-driven zines. 
-
-- Content directory moves from ./pages to ./chapters
-- Contents of ./chapters/ are treated like disparate units
-- Chapter-jump buttons
-- display most-recent page first or first page of first chapter first
-	- buttons move thru pages relative to this choice
-
-
-User-settable preferences. 
-- Most-recent page first or first page of first chapter first
-
-Logical housekeeping
-- Rendering and filehandling functions separated
-
-*/
-
 include './res/src/globals.php';
 include './res/src/user-prefs.php';
 include './res/src/blocklist.php';
@@ -28,42 +7,85 @@ include './res/src/func-filehandling.php';
 include './res/src/func-rendering.php';
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" type="text/css" href="res/style.css">
-		<link rel="stylesheet" media="(max-width: 640px)" href="res/max-640px.css">
-
-		<title>netzine-cms</title>
-		<script language="javascript">
+		<meta charset="utf-8" /> 
+        <title>netzine-cms</title>
+        <link rel="stylesheet" type="text/css" href="res/style.css">
+        <script language="javascript">
 
 			function toggleElement(uid) {
 				elm = document.getElementById(uid);
-				classes = elm.classList;
-				if ( classes.contains("visible") ){
-					classes.remove("visible");
-					classes.add("hidden");
-				} else {
+                classes = elm.classList;
+
+				if ( elmHidden(uid) ){
 					classes.remove("hidden");
 					classes.add("visible");
+				} else {
+					classes.remove("visible");
+					classes.add("hidden");
 				}
 			}
 
-		</script>
-	</head>
-	<body>
-		<?php requestPage() ?>
+            function elmHidden(uid) {
+                elm = document.getElementById(uid);
+                classes = elm.classList;
+                return classes.contains("hidden");
+            }
 
-		<div id="calendar" class="hidden">
-			<div class="top">
-				<?php buildPageLinks() ?>
-			</div>
-			<a href="?p=about.html"><div class="bottom">about</div></a>
-		</div>
-		<div id="calbutton">
-			<?php buildNavigation() ?>
-		</div>
+            function closeMenu(evt) {
+                // Clicking outside of menu closes it
+                elm = document.getElementById("calendar");
+                style = window.getComputedStyle(elm);
+                menuWidth = style.width.split("px")[0];
+                width = window.innerWidth - menuWidth;
+
+                if ( !elmHidden("calendar") && evt.clientX < width ) {                  
+                    toggleElement("calendar");
+                    evt.preventDefault();
+                }
+            }            
+
+            function init() {
+
+                // Bind menu close to document click event
+                document.onclick = function(evt) {
+                    closeMenu(evt);
+                } 
+
+                // There is a bug where clicking on an iframe
+                // does not trigger a document.onclick event
+                // or even a window.onclick event.
+                // Bind document click events to all child iframes
+                // to circumvent this. 
+
+                iframes = document.getElementsByTagName('iframe');
+                iframesArray = Array.prototype.slice.apply(iframes);
+
+                iframesArray.forEach(
+                    function(frame) {
+                        frame.contentWindow.document.addEventListener('click', function(evt) {
+                            closeMenu(evt);
+                        }, 
+                    true);
+                });
+            }
+
+        </script>
+	</head>
+	<body onload="init()">
+		<div id="container">
+
+            <div id="content"><?php requestPage() ?></div>
+            <div id="calendar" class="visible">
+                <?php buildPageLinks() ?>
+            </div>
+            <div id="calbutton">
+                <?php buildNavigation() ?>
+            </div>
+
+        </div>
 	</body>
 </html>

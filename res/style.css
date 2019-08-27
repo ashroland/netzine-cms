@@ -1,16 +1,132 @@
-body {
-	margin: 0px;
-	padding: 0px;
+html {
+	width: 100%;
+	height: 100%;
 }
 
-pre code {
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	font-family: "Operator Mono", monospace;
+	font-weight: lighter;
+	font-size: 11px;
+}
+
+#container {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+}
+
+#content {
+	height: 100%;
+	width: auto;
+	flex-grow: 1;
+	overflow-y: auto;
+}
+
+#calendar {
+	width: 300px;
+	height: 100vh;
+}
+
+#calendar.visible {
+	display: flex;
+	justify-content: flex-end;
+	flex-direction: column;
+}
+
+#calendar.hidden {
+	display: none;
+}
+
+#upperMenu {
+	flex: 1;
+	overflow-y: auto;
+	padding-top: 40px;
+}
+
+
+#lowerMenu {
+	min-height: 40px;
+	margin-bottom: 100px;
+	margin-top: 20px;
+}
+
+#lowerMenu a {
+	color: cornflowerblue;
+}
+
+#lowerMenu li:hover {
+	background-color: cornflowerblue;
+	color: white;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	padding-left: 10px;
+}
+
+li {
+	padding-left: 10px;
+	min-height: 30px;
+	line-height: 30px;
+}
+
+ul ul li {
+	border-left: 1px dotted;
+}
+
+ul ul a {
+	color: #666;
+}
+
+li:hover {
+	color: white;
+	background:#666;
+}
+
+#lowerMenu ul {
+	margin: 0;
+	padding: 0;
+}
+
+#lowerMenu li {
+	list-style: none;
+	text-align: center;
+}
+
+#calbutton {
+	width: 300px;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	text-align: center;
+	height: 80px;
+}
+
+
+.visible {
+	display: block;
+}
+
+.hidden {
+	display: none;
+}
+
+#content pre code {
 
 	margin-left: 150px;
 	margin-top: 15%;
 
 }
 
-.codeheader {
+#content .codeheader {
 	font-size: 24px;
 	font-family: monospace;
 	font-weight: bolder;
@@ -20,17 +136,16 @@ pre code {
 	margin-top: 150px;
 }
 
-#frame {
-	position: absolute;
+#content #frame {
 	width: 100%;
 	height: 100%;
 	border: 0px;
+	margin-bottom: -1%;
+	padding: 0px;
 }
 
-#txt {
-	position: absolute;
-	top: 0px;
-	left: 60%;
+#content #txt {
+	padding-left: 60%;
 	width: 500px;
 	margin-left: -250px;
 	margin-top: 100px;
@@ -40,71 +155,8 @@ pre code {
 	font-size:11px;
 }
 
-#image {
+#content #image {
 	margin-bottom: 300px;
 }
 
 
-#calendar {
-	position: fixed;
-	bottom: 75px;
-	right: 40px;
-	width: 150px;
-	height: 200px;
-	background: #FFF;
-	margin: 0px;
-	padding: 0px;
-
-
-	font-size: 12px;
-	font-family: monospace;
-	z-index: 15000;
-}
-
-#calendar .top {
-	float: left top;
-	width:100%;
-	height:188px;
-	overflow-y: scroll;
-}
-
-#calendar .top ul {
-	position: relative;
-	list-style: none;
-	margin-left: 0;
-	padding-left: 1.2em;
-}
-
-#calendar .top ul li:before {
-	content: ">> ";
-	position: absolute;
-	left: 0;
-}
-
-#calendar .bottom {
-	float: left bottom;
-	width: 100%;
-	height: 12px;
-	font-size: 11px;
-	background: #CCC;
-	text-align: center;
-}
-
-#calendar .bottom:hover {
-	background: #666;
-}
-
-#calbutton {
-	position: fixed;
-	bottom: 20px;
-	right: 40px;
-	z-index: 15000;
-}
-
-.hidden {
-	display: none;
-}
-
-.visible {
-	display: block;
-}
