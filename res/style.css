@@ -159,4 +159,10 @@ li:hover {
 	margin-bottom: 300px;
 }
 
-
+#content audio {
+	width: 500px;
+	margin-top: 166px;
+	margin-bottom: 333px;
+	margin-left: -250px;
+	padding-left: 50%;
+}

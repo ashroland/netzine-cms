@@ -46,6 +46,6 @@ $ext['text'] = array("txt");
 $ext['code'] = array("sh","py","js","c","cpp","rb");
 $ext['web']  = array("html", "php");
 $ext['images'] = array("jpg","png","gif","bmp");
-$ext['audio'] = array("mp3", "ogg", "wav");
+$ext['audio'] = array("mp3", "m4a", "ogg", "wav");
 
 ?>

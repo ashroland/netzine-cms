@@ -79,6 +79,7 @@ function buildPageFromFile($file) {
 		// WAV 	audio/wav
 
 		$typeString = ($fileExtension == "mp3" ? "mpeg" : $fileExtension);
+		$typeString = ($fileExtension == "m4a" ? "mp4" : $fileExtension);
 
 		println('<audio controls>');
 		println('<source src="' . $file . '" type="audio/' . $typeString . '">', 3);
